@@ -29,7 +29,7 @@ public class MenuScreen extends BaseScreen {
         h = img.getHeight() / 2;
         w = img.getWidth() / 2;
         touch = new Vector2();
-        pos = new Vector2();
+        pos = new Vector2(Gdx.graphics.getWidth()/2 - w, 0);
     }
 
     @Override
@@ -48,15 +48,10 @@ public class MenuScreen extends BaseScreen {
             pos.add(path);
             onPath++;
         } else if (onPath >= pathLength) {
-            pos.setZero();
+            path.setZero();
             onPath = 0;
             pos.set(touch.x, touch.y);
         }
-        /*if (pos.x == 0 && pos.y == 0) {
-            pos.set(touch.x, touch.y);
-        } else {
-            pos.set(touch.x - w, touch.y - h);
-        }*/
     }
 
     @Override
@@ -70,6 +65,7 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        //pos.set(touch.x - w, touch.y - h);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 }
