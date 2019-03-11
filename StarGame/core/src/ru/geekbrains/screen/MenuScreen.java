@@ -14,11 +14,11 @@ public class MenuScreen extends BaseScreen {
     private Texture img;
     private Vector2 touch;
     private Vector2 pos;
+    private Vector2 newPos;
     private Vector2 path;
     private int h;
     private int w;
     private float pathLength;
-    private int onPath;
 
     @Override
     public void show() {
@@ -29,7 +29,8 @@ public class MenuScreen extends BaseScreen {
         h = img.getHeight() / 2;
         w = img.getWidth() / 2;
         touch = new Vector2();
-        pos = new Vector2(Gdx.graphics.getWidth()/2 - w, 0);
+        pos = new Vector2(Gdx.graphics.getWidth()/2 - w, touch.y);
+        newPos = new Vector2();
     }
 
     @Override
@@ -41,17 +42,25 @@ public class MenuScreen extends BaseScreen {
         batch.draw(background, 0, 0);
         batch.draw(img, pos.x, pos.y);
         batch.end();
-        path = touch.cpy().sub(pos);
-        pathLength = path.len();
-        path.nor();
-        if (onPath < pathLength) {
-            pos.add(path);
-            onPath++;
-        } else if (onPath >= pathLength) {
-            path.setZero();
-            onPath = 0;
-            pos.set(touch.x, touch.y);
+
+        if (pos.x == Gdx.graphics.getWidth()/2 - w && pos.y == 0) {
+            newPos.set(Gdx.graphics.getWidth()/2 - w, touch.y);
+        } else {
+            newPos.set(touch.x - w, touch.y - h);
         }
+
+        path = newPos.cpy().sub(pos);
+        pathLength = path.len();
+        Vector2 speed = path.cpy().nor();
+        pos.add(speed);
+        pathLength--;
+
+        if (pathLength <= 0) {
+            path.setZero();
+            pos.set(newPos);
+        }
+
+
     }
 
     @Override
