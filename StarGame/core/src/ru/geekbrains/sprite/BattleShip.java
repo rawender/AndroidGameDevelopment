@@ -30,6 +30,7 @@ public class BattleShip extends Sprite {
         }
     }
 
+    @Override
     public boolean touchDown(Vector2 touch, int pointer) {
         this.touch = touch;
         speed = touch.cpy().sub(pos).setLength(SPEED_LEN);
