@@ -28,7 +28,7 @@ public class MenuScreen extends BaseScreen {
     private Star starList[];
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
-    private Music music = Gdx.audio.newMusic(Gdx.files.internal("music/menu.mp3"));
+    private Music music;
 
 
     public MenuScreen(Game game) {
@@ -38,6 +38,10 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setVolume(0.5f);
+        music.setLooping(true);
+        music.play();
         backgroundTexture = new Texture("textures/space.jpg");
         background = new Background(new TextureRegion(backgroundTexture));
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
@@ -47,8 +51,6 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
-        music.setLooping(true);
-        music.play();
     }
 
     @Override

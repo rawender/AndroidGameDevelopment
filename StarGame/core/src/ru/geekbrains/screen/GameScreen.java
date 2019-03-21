@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
-import ru.geekbrains.sprite.BattleShip;
+import ru.geekbrains.sprite.PlayerShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.sprite.StarDust;
 
@@ -21,22 +21,24 @@ public class GameScreen extends BaseScreen {
     private static final int STARDUST_COUNT = 230;
 
     private Texture backgroundTexture;
-    private Texture battleShipTexture;
     private Background background;
-    private BattleShip battleShip;
     private TextureAtlas atlas;
+
     private Star starList[];
     private StarDust starDustList[];
-    private Music music = Gdx.audio.newMusic(Gdx.files.internal("music/game.mp3"));
+    private PlayerShip playerShip;
+
+    private Music music;
 
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/game.mp3"));
+        music.setLooping(true);
+        music.play();
         backgroundTexture = new Texture("textures/space.jpg");
         background = new Background(new TextureRegion(backgroundTexture));
-        battleShipTexture = new Texture("textures/battleship.png");
-        battleShip = new BattleShip(new TextureRegion(battleShipTexture));
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starList = new Star[STAR_COUNT];
         for (int i = 0; i < starList.length; i++) {
             starList[i] = new Star(atlas);
@@ -45,8 +47,7 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < starDustList.length; i++) {
             starDustList[i] = new StarDust(atlas);
         }
-        music.setLooping(true);
-        music.play();
+        playerShip = new PlayerShip(atlas);
     }
 
     @Override
@@ -59,6 +60,7 @@ public class GameScreen extends BaseScreen {
         for (StarDust starDust : starDustList) {
             starDust.resize(worldBounds);
         }
+        playerShip.resize(worldBounds);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class GameScreen extends BaseScreen {
         for (StarDust starDust : starDustList) {
             starDust.update(delta);
         }
+        playerShip.update(delta);
     }
 
     private void  draw() {
@@ -88,29 +91,39 @@ public class GameScreen extends BaseScreen {
         for (StarDust starDust : starDustList) {
             starDust.draw(batch);
         }
-        battleShip.draw(batch);
+        playerShip.draw(batch);
         batch.end();
-        battleShip.update();
     }
 
     @Override
     public void dispose() {
         backgroundTexture.dispose();
         atlas.dispose();
-        battleShipTexture.dispose();
         music.dispose();
         super.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        battleShip.touchDown(touch, pointer);
+        playerShip.touchDown(touch, pointer);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        battleShip.touchDown(touch, pointer);
+        playerShip.touchUp(touch, pointer);
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        playerShip.keyDown(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        playerShip.keyUp(keycode);
         return false;
     }
 }
