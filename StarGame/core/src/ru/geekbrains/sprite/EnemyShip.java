@@ -1,79 +1,71 @@
 package ru.geekbrains.sprite;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.pool.BulletPool;
 
-public class EnemyShip extends Sprite {
+public class EnemyShip extends Ship {
 
-    private Rect worldBounds;
-    private Vector2 shipSpeed;
-    private int hitPoints;
-    private int damage;
-    private Vector2 bulletSpeed;
+    private enum State {DESCENT, FIGHT}
 
-    public EnemyShip() {
-        this.shipSpeed = new Vector2();
-        this.regions = new TextureRegion[1];
-    }
+    private Vector2 v0 = new Vector2();
+    private Vector2 descentV = new Vector2(0, -15f);
+    private State state;
 
-    @Override
-    public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
+    public EnemyShip(BulletPool bulletPool, Rect worldBounds, Sound shootSound) {
+        this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
+        this.shootSound = shootSound;
     }
 
     @Override
     public void update(float delta) {
-        pos.mulAdd(shipSpeed, delta);
-        if (isOutside(worldBounds)) {
-            destroy();
+        super.update(delta);
+        switch (state) {
+            case DESCENT:
+                if (getTop() <= worldBounds.getTop()) {
+                    v.set(v0);
+                    state = State.FIGHT;
+                }
+                break;
+            case FIGHT:
+                reloadTimer += delta;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+                if (getBottom() <= worldBounds.getBottom()) {
+                    this.destroy();
+                }
+                break;
         }
     }
 
     public void set(
-            TextureRegion region,
-            Vector2 pos0,
+            TextureRegion[] regions,
             Vector2 v0,
-            int hp,
+            TextureRegion bulletRegion,
+            float bulletHeight,
+            float bulletVY,
             int damage,
-            Vector2 vb,
-            Rect worldBounds,
-            float height
+            float reloadInterval,
+            float height,
+            int hp
     ) {
-        this.regions[0] = region;
-        this.pos.set(pos0);
-        this.shipSpeed.set(v0);
-        this.hitPoints = hp;
+        this.regions = regions;
+        this.v0.set(v0);
+        this.bulletRegion = bulletRegion;
+        this.bulletHeight = bulletHeight;
+        this.bulletV.set(0, bulletVY);
         this.damage = damage;
-        this.bulletSpeed = vb;
-        this.worldBounds = worldBounds;
+        this.reloadInterval = reloadInterval;
+        this.hp = hp;
         setHeightProportion(height);
-    }
-
-    public int getHitPoints() {
-        return hitPoints;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public Vector2 getBulletSpeed() {
-        return bulletSpeed;
-    }
-
-    public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
-    }
-
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
-    public void setBulletSpeed(Vector2 bulletSpeed) {
-        this.bulletSpeed = bulletSpeed;
+        reloadTimer = reloadInterval;
+        this.v.set(descentV);
+        state = State.DESCENT;
     }
 }

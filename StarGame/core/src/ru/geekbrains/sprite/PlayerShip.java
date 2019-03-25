@@ -1,28 +1,22 @@
 package ru.geekbrains.sprite;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.pool.BulletPool;
 
-public class PlayerShip extends Sprite {
+public class PlayerShip extends Ship {
 
     //private static float SPEED_LEN = 0.5f;
     private static final int INVALID_POINTER = -1;
 
-    private TextureAtlas atlas;
-    private Rect worldBounds;
-
-    private Vector2 v = new Vector2();
     private Vector2 v0 = new Vector2(50f, 0);
     //private Vector2 touch;
     //private Vector2 newPos;
     //private Vector2 speed;
-    private int hitPoints;
-    private int damage;
 
     private boolean isPressedRight;
     private boolean isPressedLeft;
@@ -30,22 +24,34 @@ public class PlayerShip extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public PlayerShip(TextureAtlas atlas) {
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
-        this.atlas = atlas;
         /*this.touch = new Vector2();
         this.speed = new Vector2();
         this.newPos = new Vector2();*/
         setHeightProportion(10f);
+        this.bulletPool = bulletPool;
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletHeight = 0.75f;
+        this.bulletV.set(0, 50f);
+        this.damage = 1;
+        this.hp = 10;
+        this.reloadInterval = 0.2f;
+        this.shootSound = shootSound;
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        this.worldBounds = worldBounds;
+        super.resize(worldBounds);
         setBottom(worldBounds.getBottom() + 5f);
     }
 
     public void update(float delta) {
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
         pos.mulAdd(v, delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
@@ -113,9 +119,6 @@ public class PlayerShip extends Sprite {
                 isPressedRight = true;
                 moveRight();
                 break;
-            case Input.Keys.UP:
-                shoot();
-                break;
         }
     }
 
@@ -140,10 +143,6 @@ public class PlayerShip extends Sprite {
                 }
                 break;
         }
-    }
-
-    public void shoot() {
-
     }
 
     private void moveRight() {
