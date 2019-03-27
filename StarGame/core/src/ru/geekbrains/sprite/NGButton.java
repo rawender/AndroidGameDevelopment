@@ -7,20 +7,20 @@ import ru.geekbrains.base.ScaledButton;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.screen.GameScreen;
 
-public class ButtonPlay extends ScaledButton {
+public class NGButton extends ScaledButton {
 
     private Game game;
 
-    public ButtonPlay(TextureAtlas atlas, Game game) {
-        super(atlas.findRegion("btPlay"));
+    public NGButton(TextureAtlas atlas, Game game) {
+
+        super(atlas.findRegion("button_new_game"));
         this.game = game;
-        setHeightProportion(12f);
+        setHeightProportion(4f);
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setBottom(worldBounds.getBottom() + 3f);
-        setRight(worldBounds.getRight() - 3f);
+        setBottom(worldBounds.getBottom() + 40f);
     }
 
     @Override

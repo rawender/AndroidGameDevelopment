@@ -12,25 +12,25 @@ import ru.geekbrains.sprite.EnemyShip;
 public class EnemiesEmitter {
 
     private static final float ENEMY_SMALL_HEIGHT = 8f;
-    private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.75f;
+    private static final float ENEMY_SMALL_BULLET_HEIGHT = 1f;
     private static final float ENEMY_SMALL_BULLET_VY = -30f;
     private static final int ENEMY_SMALL_DAMAGE = 1;
     private static final float ENEMY_SMALL_RELOAD_INTERVAL = 1f;
     private static final int ENEMY_SMALL_HP = 1;
 
-    private static final float ENEMY_AVERAGE_HEIGHT = 10f;
-    private static final float ENEMY_AVERAGE_BULLET_HEIGHT = 1f;
+    private static final float ENEMY_AVERAGE_HEIGHT = 12f;
+    private static final float ENEMY_AVERAGE_BULLET_HEIGHT = 2.5f;
     private static final float ENEMY_AVERAGE_BULLET_VY = -25f;
-    private static final int ENEMY_AVERAGE_DAMAGE = 3;
+    private static final int ENEMY_AVERAGE_DAMAGE = 5;
     private static final float ENEMY_AVERAGE_RELOAD_INTERVAL = 2f;
-    private static final int ENEMY_AVERAGE_HP = 3;
+    private static final int ENEMY_AVERAGE_HP = 5;
 
-    private static final float ENEMY_BIG_HEIGHT = 12f;
-    private static final float ENEMY_BIG_BULLET_HEIGHT = 1.25f;
+    private static final float ENEMY_BIG_HEIGHT = 16f;
+    private static final float ENEMY_BIG_BULLET_HEIGHT = 4f;
     private static final float ENEMY_BIG_BULLET_VY = -20f;
-    private static final int ENEMY_BIG_DAMAGE = 5;
+    private static final int ENEMY_BIG_DAMAGE = 10;
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 3f;
-    private static final int ENEMY_BIG_HP = 5;
+    private static final int ENEMY_BIG_HP = 10;
 
     private Rect worldBounds;
 
@@ -40,15 +40,13 @@ public class EnemiesEmitter {
     private TextureRegion[] enemySmallRegion;
     private Vector2 enemySmallV = new Vector2(0f, -20f);
     private TextureRegion[] enemyAverageRegion;
-    private Vector2 enemyAverageV = new Vector2(0f, -15f);
+    private Vector2 enemyAverageV = new Vector2(0f, -5f);
     private TextureRegion[] enemyBigRegion;
-    private Vector2 enemyBigV = new Vector2(0f, -10f);
+    private Vector2 enemyBigV = new Vector2(0f, -0.8f);
 
     private TextureRegion bulletRegion;
 
     private EnemyPool enemyPool;
-
-    private float x;
 
     public EnemiesEmitter(TextureAtlas atlas, Rect worldBounds, EnemyPool enemyPool) {
         this.worldBounds = worldBounds;
@@ -66,9 +64,9 @@ public class EnemiesEmitter {
         generateTimer += delta;
         if (generateTimer >= generateInterval) {
             generateTimer = 0f;
-            x = Rnd.nextFloat(0f, 10f);
-            if (x >= 0f && x <= 5f) {
-                EnemyShip enemyShip = enemyPool.obtain();
+            EnemyShip enemyShip = enemyPool.obtain();
+            float type = Rnd.nextFloat(0f, 1f);
+            if (type >= 0f && type <= 0.6f) {
                 enemyShip.set(
                         enemySmallRegion,
                         enemySmallV,
@@ -80,10 +78,7 @@ public class EnemiesEmitter {
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP
                 );
-                enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
-                enemyShip.setBottom(worldBounds.getTop());
-            } else if (x >= 6f && x <= 8f) {
-                EnemyShip enemyShip = enemyPool.obtain();
+            } else if (type > 0.6f && type <= 0.85f) {
                 enemyShip.set(
                         enemyAverageRegion,
                         enemyAverageV,
@@ -95,10 +90,7 @@ public class EnemiesEmitter {
                         ENEMY_AVERAGE_HEIGHT,
                         ENEMY_AVERAGE_HP
                 );
-                enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
-                enemyShip.setBottom(worldBounds.getTop());
-            } else if (x >= 9f && x <= 10f) {
-                EnemyShip enemyShip = enemyPool.obtain();
+            } else {
                 enemyShip.set(
                         enemyBigRegion,
                         enemyBigV,
@@ -110,9 +102,9 @@ public class EnemiesEmitter {
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP
                 );
-                enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
-                enemyShip.setBottom(worldBounds.getTop());
             }
+            enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
+            enemyShip.setBottom(worldBounds.getTop());
         }
     }
 }
