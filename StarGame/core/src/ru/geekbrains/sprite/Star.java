@@ -1,6 +1,7 @@
 package ru.geekbrains.sprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
@@ -11,23 +12,25 @@ public class Star extends Sprite {
     private float starHeightMin;
     private float starHeightMax;
     private float starHeight;
-    private float shine;
+    private float animateInterval;
+    private float animateTimer;
 
     public Star(TextureAtlas atlas) {
-        super(atlas.findRegion("star"));
-        starHeightMin = 0.5f;
-        starHeightMax = 0.6f;
+        super(atlas.findRegion("pulsating_star"), 1, 14, 14);
+        starHeightMin = 1f;
+        starHeightMax = 2f;
         starHeight = Rnd.nextFloat(starHeightMin, starHeightMax);
-        shine = Rnd.nextFloat(0.001f, 0.002f);
+        animateInterval = Rnd.nextFloat(0.15f, 0.25f);
     }
 
     @Override
     public void update(float delta) {
-        super.update(delta);
-        if (starHeight >= starHeightMax) {
-            starHeight = starHeightMin;
-        } else {
-            starHeight += shine;
+        animateTimer += delta;
+        if (animateTimer >= animateInterval) {
+            animateTimer = 0f;
+            if (++frame == regions.length) {
+                frame = 0;
+            }
         }
         setHeightProportion(starHeight);
     }

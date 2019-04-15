@@ -15,20 +15,24 @@ public class StarDust extends Sprite {
     private Vector2 v;
     private Rect worldBounds;
 
-    public StarDust(TextureAtlas atlas) {
+    private Vector2 trackingV;
+    private Vector2 sumV = new Vector2();
+
+    public StarDust(TextureAtlas atlas, Vector2 trackingV) {
         super(atlas.findRegion("star"));
+        this.trackingV = trackingV;
         float vX = Rnd.nextFloat(-0.05f, 0.05f);
         float vY = Rnd.nextFloat(-50f, -10f);
         v = new Vector2(vX, vY);
-        starHeightMin = 0.3f;
-        starHeightMax = 0.4f;
+        starHeightMin = 0.25f;
+        starHeightMax = 0.35f;
         starHeight = Rnd.nextFloat(starHeightMin, starHeightMax);
     }
 
     @Override
     public void update(float delta) {
-        super.update(delta);
-        pos.mulAdd(v, delta);
+        sumV.setZero().mulAdd(trackingV, 0.2f).rotate(180).add(v);
+        this.pos.mulAdd(sumV, delta);
         checkAndHandleBounds();
         if (starHeight >= starHeightMax) {
             starHeight = starHeightMin;

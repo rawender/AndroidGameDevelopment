@@ -12,6 +12,8 @@ public class Bullet extends Sprite {
     private Vector2 v;
     private int damage;
     private Object owner;
+    private float animateInterval = 0.017f;
+    private float animateTimer;
 
     public Bullet() {
         this.v = new Vector2();
@@ -25,16 +27,16 @@ public class Bullet extends Sprite {
     }
 
     public void set(
-        Object owner,
-        TextureRegion region,
-        Vector2 pos0,
-        Vector2 v0,
-        float height,
-        Rect worldBounds,
-        int damage
+            Object owner,
+            TextureRegion[] regions,
+            Vector2 pos0,
+            Vector2 v0,
+            float height,
+            Rect worldBounds,
+            int damage
     ) {
         this.owner = owner;
-        this.regions[0] = region;
+        this.regions = regions;
         this.pos.set(pos0);
         this.v.set(v0);
         setHeightProportion(height);
@@ -44,7 +46,14 @@ public class Bullet extends Sprite {
 
     @Override
     public void update(float delta) {
-        pos.mulAdd(v, delta);
+        animateTimer += delta;
+        if (animateTimer >= animateInterval) {
+            animateTimer = 0f;
+            if (++frame == regions.length) {
+                frame = 0;
+            }
+        }
+        this.pos.mulAdd(v, delta);
         if (isOutside(worldBounds)) {
             destroy();
         }

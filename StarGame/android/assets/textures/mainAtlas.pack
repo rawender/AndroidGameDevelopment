@@ -1,0 +1,159 @@
+
+mainAtlas.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+shield
+  rotate: false
+  xy: 1, 1823
+  size: 13200, 1200
+  orig: 13200, 1200
+  offset: 0, 0
+  index: -1
+explosion
+  rotate: false
+  xy: 1, 1565
+  size: 12288, 256
+  orig: 12288, 256
+  offset: 0, 0
+  index: -1
+bonus_explosion
+  rotate: false
+  xy: 1, 363
+  size: 10800, 1200
+  orig: 10800, 1200
+  offset: 0, 0
+  index: -1
+pulsating_star
+  rotate: false
+  xy: 1, 1
+  size: 5040, 360
+  orig: 5040, 360
+  offset: 0, 0
+  index: -1
+bulletEnemy1
+  rotate: false
+  xy: 5043, 233
+  size: 3072, 128
+  orig: 3072, 128
+  offset: 0, 0
+  index: -1
+bulletEnemy2
+  rotate: false
+  xy: 5043, 103
+  size: 3072, 128
+  orig: 3072, 128
+  offset: 0, 0
+  index: -1
+message_game_over
+  rotate: false
+  xy: 10803, 1444
+  size: 1235, 119
+  orig: 1235, 119
+  offset: 0, 0
+  index: -1
+bulletEnemy0
+  rotate: false
+  xy: 8117, 233
+  size: 1024, 128
+  orig: 1024, 128
+  offset: 0, 0
+  index: -1
+enemy1
+  rotate: false
+  xy: 10803, 1018
+  size: 656, 424
+  orig: 656, 424
+  offset: 0, 0
+  index: -1
+enemy2
+  rotate: false
+  xy: 10803, 557
+  size: 620, 459
+  orig: 620, 459
+  offset: 0, 0
+  index: -1
+btnExit
+  rotate: false
+  xy: 12291, 1615
+  size: 741, 206
+  orig: 741, 206
+  offset: 0, 0
+  index: -1
+btnNewGame
+  rotate: false
+  xy: 8117, 25
+  size: 741, 206
+  orig: 741, 206
+  offset: 0, 0
+  index: -1
+main_ship
+  rotate: false
+  xy: 11461, 1167
+  size: 318, 275
+  orig: 318, 275
+  offset: 0, 0
+  index: -1
+bulletMainShip
+  rotate: false
+  xy: 9143, 297
+  size: 512, 64
+  orig: 512, 64
+  offset: 0, 0
+  index: -1
+enemy0
+  rotate: false
+  xy: 11781, 1203
+  size: 204, 239
+  orig: 204, 239
+  offset: 0, 0
+  index: -1
+Bonus0
+  rotate: false
+  xy: 12040, 1463
+  size: 200, 100
+  orig: 200, 100
+  offset: 0, 0
+  index: -1
+Bonus1
+  rotate: false
+  xy: 10803, 455
+  size: 200, 100
+  orig: 200, 100
+  offset: 0, 0
+  index: -1
+Bonus2
+  rotate: false
+  xy: 5043, 1
+  size: 200, 100
+  orig: 200, 100
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 11425, 999
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: -1
+current_HP
+  rotate: false
+  xy: 12291, 1597
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+current_shield
+  rotate: false
+  xy: 13034, 1805
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+HP
+  rotate: false
+  xy: 8860, 215
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

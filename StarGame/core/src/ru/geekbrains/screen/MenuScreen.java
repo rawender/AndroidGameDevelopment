@@ -14,6 +14,7 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.ButtonExit;
 import ru.geekbrains.sprite.ButtonPlay;
+import ru.geekbrains.sprite.LogoMessage;
 import ru.geekbrains.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
@@ -26,6 +27,7 @@ public class MenuScreen extends BaseScreen {
     private Background background;
     private TextureAtlas atlas;
     private Star starList[];
+    private LogoMessage logoMessage;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
     private Music music;
@@ -44,11 +46,12 @@ public class MenuScreen extends BaseScreen {
         music.play();
         backgroundTexture = new Texture("textures/space.jpg");
         background = new Background(new TextureRegion(backgroundTexture));
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/menuAtlas.pack");
         starList = new Star[STAR_COUNT];
         for (int i = 0; i < starList.length; i++) {
             starList[i] = new Star(atlas);
         }
+        logoMessage = new LogoMessage(atlas);
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
     }
@@ -60,8 +63,6 @@ public class MenuScreen extends BaseScreen {
         for (Star star : starList) {
             star.resize(worldBounds);
         }
-        buttonExit.resize(worldBounds);
-        buttonPlay.resize(worldBounds);
     }
 
     @Override
@@ -85,6 +86,7 @@ public class MenuScreen extends BaseScreen {
         for (Star star : starList) {
             star.draw(batch);
         }
+        logoMessage.draw(batch);
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
         batch.end();

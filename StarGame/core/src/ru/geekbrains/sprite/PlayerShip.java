@@ -8,16 +8,17 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.ExplosionPool;
+import ru.geekbrains.pool.ShieldPool;
+import ru.geekbrains.utils.Regions;
 
 public class PlayerShip extends Ship {
 
-    //private static float SPEED_LEN = 0.5f;
-    private static final int INVALID_POINTER = -1;
+    private static final int INVALID_POINTER = 0;
+    private static final int HP = 100;
 
-    private Vector2 v0 = new Vector2(50f, 0);
-    //private Vector2 touch;
-    //private Vector2 newPos;
-    //private Vector2 speed;
+    private Vector2 v0 = new Vector2(25f, 0);
+
+    private ShieldPool shieldPool;
 
     private boolean isPressedRight;
     private boolean isPressedLeft;
@@ -25,21 +26,31 @@ public class PlayerShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
+    private Vector2 lastTouch = new Vector2();
+
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, ShieldPool shieldPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
-        /*this.touch = new Vector2();
-        this.speed = new Vector2();
-        this.newPos = new Vector2();*/
-        setHeightProportion(10f);
+        setHeightProportion(13f);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
-        this.bulletRegion = atlas.findRegion("bulletMainShip");
-        this.bulletHeight = 0.75f;
+        this.shieldPool = shieldPool;
+        this.bulletRegions = Regions.split(atlas.findRegion("bulletMainShip"), 1, 16, 16);
+        this.bulletHeight = 3.5f;
         this.bulletV.set(0, 50f);
         this.damage = 1;
-        this.hp = 10;
+        this.hp = HP;
         this.reloadInterval = 0.2f;
         this.shootSound = shootSound;
+    }
+
+    public void startNewGame(Rect worldBounds) {
+        this.hp = HP;
+        this.damage = 1;
+        pos.x = worldBounds.pos.x;
+        v.setZero();
+        flushDestroy();
+        isPressedRight = false;
+        isPressedLeft = false;
     }
 
     @Override
@@ -49,12 +60,13 @@ public class PlayerShip extends Ship {
     }
 
     public void update(float delta) {
+        super.update(delta);
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
         }
-        pos.mulAdd(v, delta);
+        this.pos.mulAdd(v, delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -63,12 +75,6 @@ public class PlayerShip extends Ship {
             setLeft(worldBounds.getLeft());
             stop();
         }
-        /*newPos.set(touch);
-        if(newPos.sub(pos).len() <= SPEED_LEN) {
-            pos.set(touch);
-        } else {
-            pos.add(speed);
-        }*/
     }
 
     @Override
@@ -86,6 +92,7 @@ public class PlayerShip extends Ship {
             rightPointer = pointer;
             moveRight();
         }
+        lastTouch.set(touch);
         return false;
     }
 
@@ -106,6 +113,11 @@ public class PlayerShip extends Ship {
                 stop();
             }
         }
+        return false;
+    }
+
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        this.pos.set(touch.x, this.pos.y);
         return false;
     }
 
@@ -166,5 +178,14 @@ public class PlayerShip extends Ship {
 
     private void stop() {
         v.setZero();
+    }
+
+    public static int getHP() {
+        return HP;
+    }
+
+    public void shieldUp() {
+        Shield shield = shieldPool.obtain();
+        shield.set(this.getHeight() * 1.2f, this.pos);
     }
 }

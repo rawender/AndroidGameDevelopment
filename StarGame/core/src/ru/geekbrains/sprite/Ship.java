@@ -19,7 +19,7 @@ public class Ship extends Sprite {
 
     protected BulletPool bulletPool;
     protected ExplosionPool explosionPool;
-    protected TextureRegion bulletRegion;
+    protected TextureRegion[] bulletRegions;
     protected int damage;
     protected int hp;
 
@@ -45,7 +45,7 @@ public class Ship extends Sprite {
 
     @Override
     public void update(float delta) {
-        pos.mulAdd(v, delta);
+        this.pos.mulAdd(v, delta);
         damageAnimateTimer += delta;
         if (damageAnimateTimer >= damageAnimateInterval) {
             frame = 0;
@@ -69,17 +69,33 @@ public class Ship extends Sprite {
 
     public void shoot() {
         Bullet bullets = bulletPool.obtain();
-        bullets.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
+        bullets.set(this, bulletRegions, pos, bulletV, bulletHeight, worldBounds, damage);
         shootSound.play();
     }
 
     public void boom() {
         Explosion explosion = explosionPool.obtain();
-        explosion.set(this.getHeight(), this.pos);
+        explosion.set(this.getHeight() * 2f, this.pos);
     }
 
     public int getHp() {
         return hp;
+    }
+
+    public Vector2 getV() {
+        return v;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }
 

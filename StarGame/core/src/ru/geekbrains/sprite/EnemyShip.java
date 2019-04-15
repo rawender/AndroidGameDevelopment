@@ -15,6 +15,8 @@ public class EnemyShip extends Ship {
     private Vector2 v0 = new Vector2();
     private Vector2 descentV = new Vector2(0, -15f);
     private State state;
+    private int points;
+    private boolean selfDestroy;
 
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds, Sound shootSound) {
         this.bulletPool = bulletPool;
@@ -31,6 +33,7 @@ public class EnemyShip extends Ship {
                 if (getTop() <= worldBounds.getTop()) {
                     v.set(v0);
                     state = State.FIGHT;
+                    selfDestroy = false;
                 }
                 break;
             case FIGHT:
@@ -40,7 +43,9 @@ public class EnemyShip extends Ship {
                     shoot();
                 }
                 if (getBottom() <= worldBounds.getBottom()) {
+                    selfDestroy = true;
                     this.destroy();
+
                 }
                 break;
         }
@@ -49,22 +54,24 @@ public class EnemyShip extends Ship {
     public void set(
             TextureRegion[] regions,
             Vector2 v0,
-            TextureRegion bulletRegion,
+            TextureRegion[] bulletRegions,
             float bulletHeight,
             float bulletVY,
             int damage,
             float reloadInterval,
             float height,
-            int hp
+            int hp,
+            int points
     ) {
         this.regions = regions;
         this.v0.set(v0);
-        this.bulletRegion = bulletRegion;
+        this.bulletRegions = bulletRegions;
         this.bulletHeight = bulletHeight;
         this.bulletV.set(0, bulletVY);
         this.damage = damage;
         this.reloadInterval = reloadInterval;
         this.hp = hp;
+        this.points = points;
         setHeightProportion(height);
         reloadTimer = reloadInterval;
         this.v.set(descentV);
@@ -78,5 +85,21 @@ public class EnemyShip extends Ship {
                         || bullet.getBottom() > getTop()
                         || bullet.getTop() <  pos.y
         );
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public boolean cheсkState() {
+        boolean res = true;
+        if (this.state == State.DESCENT) {
+            res = false;
+        }
+        return res;
+    }
+
+    public boolean isSelfDestroy() {
+        return selfDestroy;
     }
 }
